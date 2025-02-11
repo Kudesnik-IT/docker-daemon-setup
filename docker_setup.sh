@@ -29,8 +29,8 @@
 # - Coreutils (для команды cp, echo, sleep и т.д.)
 # - Systemd (для управления службой Docker)
 # Инструкции по использованию:
-# 1. Сделайте скрипт исполняемым: chmod +x docker_daemon_config.sh
-# 2. Запустите скрипт с правами root: ./docker_daemon_config.sh
+# 1. Сделайте скрипт исполняемым: chmod +x docker_setup.sh
+# 2. Запустите скрипт с правами root: ./docker_setup.sh
 # 3. Следуйте инструкциям на экране.
 # История изменений:
 # v1.0 (2025-02-12): Первая версия скрипта.
@@ -84,13 +84,28 @@ check_docker_status() {
 
 CONFIG='{
   "iptables": true,
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  },
+  "storage-driver": "overlay2",
+  "default-runtime": "runc",
   "live-restore": true,
   "bip": "192.168.2.254/27",
   "ipv6": false,
-  "default-address-pools": [{
-    "base": "192.168.2.0/24",
-    "size": 27
-  }]
+  "fixed-cidr": "192.168.2.0/27",
+  "default-address-pools": [
+    {
+      "base": "192.168.2.0/24",
+      "size": 27
+    }
+  ],
+  "oom-score-adjust": -500,
+  "default-ulimits": {
+    "nofile": { "Name": "nofile", "Hard": 65535, "Soft": 65535 },
+    "nproc": { "Name": "nproc", "Hard": 65535, "Soft": 65535 }
+  }
 }'
 
 cat <<EOF
@@ -116,7 +131,7 @@ if [ -f "$DAEMON_JSON" ]; then
 fi
 
 # Создаем или обновляем файл daemon.json
-log "$CONFIG" > "$DAEMON_JSON"
+echo "$CONFIG" > "$DAEMON_JSON"
 
 # Проверяем, успешно ли создан файл
 if [ $? -eq 0 ]; then
@@ -136,6 +151,8 @@ if check_docker_status; then
 else
   exit 1
 fi
+
+log "Настрока завершена!"
 
 #---
 # Автор: Kudesnik-IT <kudesnik.it@gmail.com>
