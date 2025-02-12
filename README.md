@@ -38,7 +38,7 @@
 
 1. **Скачайте скрипт:**
    ```bash
-   wget [https://github.com/your-repo/docker-daemon-config/raw/main/docker_daemon_config.sh](https://raw.githubusercontent.com/Kudesnik-IT/docker-daemon-setup/refs/heads/main/docker_setup.sh)
+   wget https://raw.githubusercontent.com/Kudesnik-IT/docker-daemon-setup/refs/heads/main/docker_setup.sh
    ```
 
 2. **Сделайте скрипт исполняемым:**
