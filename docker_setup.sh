@@ -101,7 +101,6 @@ CONFIG='{
       "size": 27
     }
   ],
-  "oom-score-adjust": -500,
   "default-ulimits": {
     "nofile": { "Name": "nofile", "Hard": 65535, "Soft": 65535 },
     "nproc": { "Name": "nproc", "Hard": 65535, "Soft": 65535 }
